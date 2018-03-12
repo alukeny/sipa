@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 from django.db import models
 
 # Aréa de criação dos modelos
@@ -13,7 +12,10 @@ class orgao(models.Model):
     estado=models.BooleanField(default=True, verbose_name='Activado')
     data_registo=models.DateTimeField(auto_now=True, null=True, blank=True)
 
-    def __str__(self):
+    class Meta:
+        verbose_name='Orgão'
+
+    def __unicode__(self): #unicode para aceittar o encondig: utf8 para os acentos do português.
         return self.descricao
 
 # Categórias - Ex: Loja de Registo | Conservatória | Posto de Identificação
@@ -23,8 +25,23 @@ class categoria(models.Model):
     estado = models.BooleanField(default=True, verbose_name='Activado')
     data_registo = models.DateTimeField(auto_now=True, null=True, blank=True)
 
-    def __str__(self):
+    class Meta:
+        verbose_name='Catégoria'
+
+    def __unicode__(self):
         return self.descricao
+
+class servico(models.Model):
+     cod_servico = models.IntegerField(unique=True, verbose_name='Código')
+     descricao = models.CharField(max_length=100, unique=True, verbose_name='Descrição')
+     estado = models.BooleanField(default=True, verbose_name='Activado')
+     data_registo = models.DateTimeField(auto_now=True, null=True, blank=True)
+
+     class Meta:
+         verbose_name='Serviço'
+
+     def __unicode__(self):
+         return self.descricao
 
 #Postos - Ex: Posto de Identificação do Rangel
 class posto(models.Model):
@@ -38,24 +55,29 @@ class posto(models.Model):
     data_registo=models.DateTimeField(auto_now=True, null=True, blank=True)
     orgao=models.ForeignKey(orgao, related_name='orgao', on_delete=models.CASCADE)
     categoria=models.ForeignKey(categoria, related_name='categoria', on_delete=models.CASCADE)
+    servicos=models.ManyToManyField(servico)
 
     class Meta:
         unique_together = ('orgao', 'descricao', 'categoria')
         ordering = ['descricao']
 
     def __unicode__(self):
-        return '%s: %s' ', %s' % (self.orgao, self.descricao, self.categoria)
+        return '%s' % (self.descricao)
 
 
-"""
-class servico(models.Model):
-    cod_servico=models.IntegerField(unique=True, verbose_name='Código')
-    descricao=models.CharField(max_length=100, unique=True, verbose_name='Descrição')
+#Cidadao - Ex: Adilson Pedro
+class cidadao(models.Model):
+    cod_cidadao=models.IntegerField(unique=True, verbose_name='Código')
+    nome=models.CharField(max_length=50, verbose_name='Nome')
+    sobrenome=models.CharField(max_length=50, verbose_name='Sobrenome')
+    tel=models.CharField(max_length=20, verbose_name='Telefone')
+    email=models.EmailField(default='eu@exemplo.com', verbose_name='E-mail')
+    endereco=models.CharField(max_length=50, verbose_name='Morada')
     estado=models.BooleanField(default=True, verbose_name='Activado')
-    data_registo=models.DateTimeField(auto_now=True, null=True, blank=True)
-    posto=models.ForeignKey(posto, related_name='posto', on_delete=models.CASCADE)
+    data_registo=models.DateTimeField(auto_now=True, null=True)
 
-    def __str__(self):
-        return  self.descricao
+    class Meta:
+        verbose_name='Cidadão'
 
-"""
+    def __unicode__(self):
+        return '%s, %s' % (self.nome, self.sobrenome)

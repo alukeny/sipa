@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
+# -*- coding: utf-8 -*-
 
 import os
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,13 +34,17 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
     'webapi',
+    'django.contrib.auth',
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +62,7 @@ ROOT_URLCONF = 'sipa.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -68,6 +74,16 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+)
 
 WSGI_APPLICATION = 'sipa.wsgi.application'
 
@@ -120,4 +136,43 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'sipa/static')
+
+if DEBUG:
+    MEDIA_URL = '/media/'
+    STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"sipa/static", "static-only")
+    MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"sipa/static", "media")
+    STATICFILES_DIRS = [(os.path.join(os.path.dirname(BASE_DIR),"sipa/static","static"))]
+
+SITE_ID = 1
+
+LOGIN_URL = '/accounts/login'
+LOGIN_REDIRECT_URL = '/'
+
+AACOUNT_AUTHENTICATION = "username_email"
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_CONFIRMATION_ANONYMOUS_REDIRECT_URL = LOGIN_URL
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATION_REDIRECT_URL = None
+
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = None
+ACCOUNT_EMAIL_SUNJECT_PREFIX = "Meu assunto:"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
+
+ACCOUNT_LOGOUT_ON_GET = False
+ACCOUNT_LOGOUT_REDIRECT_URL = "/"
+ACCOUNT_SIGNUP_FORM_CLASS = None
+ACCOUNT_SIGNUP_PASSWORD_VERIFICATION = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
+ACCOUNT_USER_MODEL_EMAIL_FIELD = "e-mail"
+
+ACCOUNT_USERNAME_MIN_LENGTH = 5
+ACCOUNT_USERNAME_BLACKLIST = []
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_PASSWORD_INPUT_RENDER_VALUE = False
+ACCOUNT_PASSWORD_MIN_LENGTH = 5
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True

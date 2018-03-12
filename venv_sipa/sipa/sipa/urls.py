@@ -13,20 +13,30 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework.urlpatterns import format_suffix_patterns
 from webapi import  views
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.home, name='home'),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^orgao/$', views.orgaoLista.as_view()),
     url(r'^orgao/(?P<pk>[0-9]+)$', views.orgaoDetalhes.as_view()),
     url(r'^categoria/$', views.categoriaLista.as_view()),
     url(r'^categoria/(?P<pk>[0-9]+)$', views.categoriaDetalhes.as_view()),
     url(r'^posto/$', views.postoLista.as_view()),
     url(r'^posto/(?P<pk>[0-9]+)$', views.postoDetalhes.as_view()),
+    url(r'^servico/$', views.servicoLista.as_view()),
+    url(r'^servico/(?P<pk>[0-9]+)$', views.servicoDetalhes.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
