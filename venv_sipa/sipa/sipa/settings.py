@@ -62,7 +62,7 @@ ROOT_URLCONF = 'sipa.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), os.path.join(BASE_DIR, 'templates', 'allauth')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +74,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 AUTHENTICATION_BACKENDS = (
 
@@ -143,6 +144,7 @@ if DEBUG:
     STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR),"sipa/static", "static-only")
     MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR),"sipa/static", "media")
     STATICFILES_DIRS = [(os.path.join(os.path.dirname(BASE_DIR),"sipa/static","static"))]
+
 
 SITE_ID = 1
 

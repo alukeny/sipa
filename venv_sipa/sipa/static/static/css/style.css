@@ -150,7 +150,7 @@ ul.callbacks_tabs.callbacks1_tabs {
   	left: 13%;
 }
 .caption h3{
-    color: #fff;
+    color: #003762;
     font-size: 48px;
     display: inline-block;
     padding: 0 0 0.3em;
@@ -193,7 +193,7 @@ ul.callbacks_tabs.callbacks1_tabs {
   -o-background-size: cover;
 }
 .banner3{
-	background: url(/static/img/5.jpg) no-repeat;
+	background: url(/static/img/service02.jpg) no-repeat;
 	width:100%;
 	min-height: 700px;
 	background-size: cover;
@@ -202,7 +202,7 @@ ul.callbacks_tabs.callbacks1_tabs {
   -o-background-size: cover;
 }
 .banner4{
-	background: url(/static/img/1.jpg) no-repeat;
+	background: url(/static/img/service03.jpg) no-repeat;
 	width:100%;
 	min-height: 700px;
 	background-size: cover;
@@ -2955,7 +2955,7 @@ button.seabtn {
 .bann-info1 h3 {
     font-size: 2.1em;
     font-weight: 700;
-    color: #34ad00;
+    color: #003762;
     text-align: center;
     margin-top: 25px;
 }

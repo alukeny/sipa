@@ -6,14 +6,31 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import orgao, categoria, posto, servico
-from .serializers import orgaoSerializer, categoriaSerializer, postoSerializer, servicoSerializer
+from .models import orgao, categoria, posto, servico, cidadao, agente, horario
+from .serializers import orgaoSerializer, categoriaSerializer, postoSerializer, servicoSerializer, cidadaoSerializer, agenteSerializer, horarioSerializer
 from django.http import Http404
 from rest_framework.decorators import api_view
+from allauth.account.views import *
 
 # Area de criação de views
 
 #Metodo que retorna a view home, para a página principal
+
+
+class JointLoginSignupView(LoginView):
+    form_class = LoginForm
+    signup_form = SignupForm
+
+    def __init__(self, **kwargs):
+        super(JointLoginSignupView, self).__init__(*kwargs)
+
+    def get_context_data(self, **kwargs):
+        ret = super(JointLoginSignupView, self).get_context_data(**kwargs)
+        ret['signupform'] = get_form_class(app_settings.FORMS, 'signup', self.signup_form)
+        return ret
+
+
+login = JointLoginSignupView.as_view()
 def home(request):
     context = locals()
     template = 'home.html'
@@ -187,6 +204,142 @@ class servicoDetalhes(APIView):
     def put(self, request, pk, format=None):
         dados = self.get_object(pk)
         serializer = servicoSerializer(dados, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        dados.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+# View para listar os cidadãos
+class cidadaoLista(APIView):
+
+    def get(self, request, format=None):
+        dados = cidadao.objects.all()
+        serializer = cidadaoSerializer(dados, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = cidadaoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class cidadaoDetalhes(APIView):
+    """
+    Fornece opções de consultar por pk, actualizar e deletar.
+    """
+    def get_object(self, pk):
+        try:
+            return cidadao.objects.get(pk=pk)
+        except cidadao.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        serializer = cidadaoSerializer(dados)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        serializer = cidadaoSerializer(dados, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        dados.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# View para listar os agentes
+class agenteLista(APIView):
+
+    def get(self, request, format=None):
+        dados = agente.objects.all()
+        serializer = agenteSerializer(dados, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = agenteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class agenteDetalhes(APIView):
+    """
+    Fornece opções de consultar por pk, actualizar e deletar.
+    """
+    def get_object(self, pk):
+        try:
+            return agente.objects.get(pk=pk)
+        except agente.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        serializer = agenteSerializer(dados)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        serializer = agenteSerializer(dados, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        dados.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# View para listar os horarios
+class horarioLista(APIView):
+
+    def get(self, request, format=None):
+        dados = horario.objects.all()
+        serializer = horarioSerializer(dados, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = horarioSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class horarioDetalhes(APIView):
+    """
+    Fornece opções de consultar por pk, actualizar e deletar.
+    """
+    def get_object(self, pk):
+        try:
+            return horario.objects.get(pk=pk)
+        except horario.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        serializer = horarioSerializer(dados)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        dados = self.get_object(pk)
+        serializer = horarioSerializer(dados, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

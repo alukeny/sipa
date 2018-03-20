@@ -19,6 +19,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from webapi import  views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -33,6 +34,12 @@ urlpatterns = [
     url(r'^posto/(?P<pk>[0-9]+)$', views.postoDetalhes.as_view()),
     url(r'^servico/$', views.servicoLista.as_view()),
     url(r'^servico/(?P<pk>[0-9]+)$', views.servicoDetalhes.as_view()),
+    url(r'^cidadao/$', views.cidadaoLista.as_view()),
+    url(r'^cidadao/(?P<pk>[0-9]+)$', views.cidadaoDetalhes.as_view()),
+    url(r'^agente/$', views.agenteLista.as_view()),
+    url(r'^agente/(?P<pk>[0-9]+)$', views.agenteDetalhes.as_view()),
+    url(r'^horario/$', views.horarioLista.as_view()),
+    url(r'^horario/(?P<pk>[0-9]+)$', views.horarioDetalhes.as_view()),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
